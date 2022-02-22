@@ -1,0 +1,12 @@
+[Unit]
+Description=reweb instagram media downloader service
+After=network.target
+
+[Service]
+ExecStart=/usr/local/reweb/reweb --env-file .env
+WorkingDirectory=/usr/local/reweb
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

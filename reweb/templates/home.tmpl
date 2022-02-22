@@ -1,0 +1,30 @@
+<section class="content">
+    <div id="alertBox"></div>
+    <div class="row">
+        <div class="col-md-6">
+            <form id="form-edit" method="POST" action="/magic">
+                <div class="box box-info">
+                    <div class="box-body">
+                        <input id="insturl" class="form-control input-lg" type="text" name="links[]" placeholder="Paste Instagram Post URL">
+                    </div>
+                    <div class="box-footer clearfix">
+                        <button type="submit" class="btn btn-primary btn-block">Show Me Magic</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="box box-info">
+                <div class="box-body">
+                    <div id="insoembed">Preview is here</div>
+                </div>
+            </div>
+        </div>
+        <div id="magicResult" class="col-md-6">
+            <div class="box box-success">
+                <div class="box-body table-responsive no-padding">
+                    <p style="padding: 5px 5px 0 5px;">Magic is generating</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

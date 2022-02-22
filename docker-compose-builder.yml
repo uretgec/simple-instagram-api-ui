@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  reposter-builder:
+    image: reposter-builder:latest
+    build:
+      context: ./
+      args:
+        SERVICE_COMMIT_ID: ${SERVICE_COMMIT_ID}
+        SERVICE_BUILD: ${SERVICE_BUILD}
+    container_name: reposter-builder
