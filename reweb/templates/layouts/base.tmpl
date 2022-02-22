@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{.Title}}</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/assets/css/skin-blue-light.min.css">
+</head>
+<body class="hold-transition skin-blue-light layout-top-nav">
+    <div class="wrapper">
+        <header class="main-header">
+            <nav class="navbar navbar-static-top">
+              <div class="container">
+                <div class="navbar-header">
+                  <a href="/" class="navbar-brand">{{.Title}}</a>
+                </div>
+              </div>
+            </nav>
+        </header>
+
+
+        <div class="content-wrapper">
+            <div class="container">
+                {{embed}}
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="pull-right hidden-xs"><b>v</b> 0.0.1</div>
+            <strong>&copy; 2022 <a href="#">RePoster</a>.</strong> All rights reserved.
+        </div>
+    </footer>
+
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/jquery.serializejson.min.js"></script>
+    <script src="/assets/js/adminlte.min.js"></script>
+
+    <script>
+        $(function () {
+            'use strict'
+
+            function oembedUrl(url) {
+                return '<iframe src="'+url+'/embed" width="320" height="440" frameborder="0" scrolling="no" allowtransparency="true"></iframe>'
+            }
+
+            $(document).on("change", "input#insturl", function(e) {
+                var insturl = $(this).val()
+                if (insturl == null) {
+                    $("#insoembed").html("Preview is here")
+                }
+            })
+    
+            $("form#form-edit").on('submit', function(e){
+                e.preventDefault();
+
+                var form = $(this)
+                console.log("serialize form", $(this).serializeJSON())
+
+                $.ajax({
+                    url: form.attr("action"), // url where to submit the request
+                    type : form.attr("method"), // type of action POST || GET
+                    dataType : 'json', // data type
+                    contentType: "application/json; charset=utf-8",
+                    data : JSON.stringify($(this).serializeJSON()), // post data || get data
+                    success : function(resp) {
+                        //console.log(resp);
+                        var alertBox = '<div class="alert alert-success alert-dismissible">'
+                            + '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>'
+                            + '<h4><i class="icon fa fa-check"></i> Info!</h4>'
+                            + resp.message
+                            + '</div>'
+    
+                        $("#alertBox").html(alertBox)
+
+                        if (resp.status) {
+                            var magicResult = '<table class="table table-hover">'
+                                    + '<tbody>'
+                                        + '<tr>'
+                                            + '<td>'
+                                                + '<strong>Owner</strong>'
+                                            + '</td>'
+                                        + '</tr>'
+                                        + '<tr>'
+                                            + '<td>'
+                                                + '<a href="https://www.instagram.com/' + resp.result.username + '" target="_blank">@' + resp.result.username + '</a>'
+                                                + ' <a class="btn btn-sm btn-danger" target="_blank" href="'+ resp.result.profile_pic_url +'" title="Download Profile">Download Profile IMG</a>'
+                                            + '</td>'
+                                        + '</tr>'
+                                        + '<tr>'
+                                            + '<td>'
+                                                + '<strong>Caption</strong>'
+                                            + '</td>'
+                                        + '</tr>'
+                                        + '<tr>'
+                                            + '<td>'
+                                                + resp.result.caption
+                                            + '</td>'
+                                        + '</tr>'
+                                        + '<tr>'
+                                            + '<td>'
+                                                + '<strong>Main Medias</strong>'
+                                            + '</td>'
+                                        + '</tr>'
+                                        + '<tr>'
+                                            + '<td>'
+                                                + ' <a class="btn btn-sm btn-info" target="_blank" href="'+ resp.result.display_url +'" title="Download Img">Download IMG</a>'
+                                                if (!!resp.result.video_url) {
+                                                    magicResult += ' <a class="btn btn-sm btn-warning" target="_blank" href="'+ resp.result.video_url +'" title="Download Video">Download Video</a>' 
+                                                }
+                                magicResult += '</td>'
+                                        + '</tr>'
+                                        if (!!resp.result.multiple_media_list && resp.result.multiple_media_list.length > 0) {
+                                magicResult += '<tr>'
+                                            + '<td>'
+                                                + '<strong>Other Medias</strong>'
+                                            + '</td>'
+                                        + '</tr>'
+                                            resp.result.multiple_media_list.forEach((item, index) => {
+                                            magicResult += '<tr>'
+                                                + '<td>'
+                                                var imgNumber = index + 1
+                                                magicResult += ' <a class="btn btn-sm btn-success" target="_blank" href="'+ item.display_url +'" title="Download Img">Download '+imgNumber+'. Img</a>' 
+                                                if (!!item.video_url) {
+                                                    magicResult += ' <a class="btn btn-sm btn-warning" target="_blank" href="'+ item.video_url +'" title="Download Video">Download '+imgNumber+'. Video</a>' 
+                                                }
+                                            magicResult += '</td>'
+                                            + '</tr>'
+                                            });
+                                        }
+                            magicResult += '</tbody>'
+                                + '</table>'
+
+                            $("#insoembed").html(oembedUrl(resp.result.url))
+                            $("#magicResult .box-body").html(magicResult)
+                        } else {
+
+                        }
+                    },
+                    error: function(xhr, resp, text) {
+                        console.log(xhr, resp, text);
+                    }
+                })
+    
+            })
+            
+        })
+    </script>
+</body>
+</html>
