@@ -1,4 +1,4 @@
-### INSTAGRAM MEDIA UI FOR DOWNLOAD THEM
+### INSTAGRAM MEDIA UI FOR DOWNLOAD THEM (v1.0.0)
 
 Extract Instagram Media images, reels,tv, albums etc. urls for download them only one UI.
 
